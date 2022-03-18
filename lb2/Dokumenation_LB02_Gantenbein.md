@@ -23,7 +23,7 @@ Der Portainer wird auf einer Docker VM installiert, welche wiederrum über Ubunt
 ---
 <a name="grafische"></a>
 # Grafische Übersicht
-![image](C:\Users\gantenbein\Downloads\Grafik.jpg)
+![image](https://github.com/RobinGantenbein/M300-Services/blob/main/lb2/Grafik.jpg)
 
 
 ---
