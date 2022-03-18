@@ -1,7 +1,6 @@
 Vagrant.configure(2) do |config|
   config.vm.box = "ubuntu/bionic64"
-  config.vm.network "forwarded_port", guest:9443, host:9443, auto_correct: false
-  config.vm.synced_folder ".", "/var/www/html"  
+  config.vm.network "forwarded_port", guest:9443, host:9443, auto_correct: false 
 config.vm.provider "virtualbox" do |vb|
   vb.memory = "512"  
 end
@@ -26,14 +25,15 @@ echo \
 
 sudo apt-get update
 sudo apt-get install docker-ce docker-ce-cli containerd.io -y
+
 #Install Portainer
 
-docker volume create portainer_data
+docker volume create M300
 
 docker run -d -p 8000:8000 -p 9443:9443 --name portainer \
     --restart=always \
     -v /var/run/docker.sock:/var/run/docker.sock \
-    -v portainer_data:/data \
+    -v M300:/data \
     portainer/portainer-ce:latest
   
 SHELL
