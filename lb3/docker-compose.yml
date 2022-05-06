@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  kali:
+    image: lb3/dockerfiles/kali  
+    build: ./dockerfiles/kali
+    stdin_open: true
+    tty: true
+    ports:
+      - 8080:8080
+    command: --network host --privileged
+      

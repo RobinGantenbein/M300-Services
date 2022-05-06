@@ -1,10 +1,10 @@
-# **Dokumentation LB2**
+# **Dokumentation LB3**
 
 ---
 
 # Inhaltsverzeichnis
 
-- [**Dokumentation LB2**](#dokumentation-lb2)
+- [**Dokumentation LB3**](#dokumentation-lb3)
 - [Inhaltsverzeichnis](#inhaltsverzeichnis)
 - [Einführung](#einführung)
 - [Grafische Übersicht](#grafische-übersicht)
@@ -23,7 +23,7 @@ Der Portainer wird auf einer Docker VM installiert, welche wiederrum über Ubunt
 ---
 <a name="grafische"></a>
 # Grafische Übersicht
-![image](https://github.com/RobinGantenbein/M300-Services/blob/main/lb2/images/Grafik.jpg)  
+![image](https://github.com/RobinGantenbein/M300-Services/blob/main/lb3/images/Grafik.jpg)  
 
 
 
