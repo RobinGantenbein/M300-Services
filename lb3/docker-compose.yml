@@ -1,53 +1,85 @@
-version: '3.3'
+version: "3"
+
 services:
   cloudflared:
-    image: visibilityspots/cloudflared
     container_name: cloudflared
-    ports:
-      - "5054:5054/tcp"
-      - "5054:5054/udp"
-    environment:
-      - TZ=${TIMEZONE}
-      - PORT=5054
-      - ADDRESS=192.168.178.6
-    restart: always
+    image: visibilityspots/cloudflared:latest
+    restart: unless-stopped
     networks:
-      dns-net:
-        ipv4_address: 172.20.0.2
-
-  pihole:
+      pihole_net:
+        ipv4_address: 10.0.0.2
+    environment:
+      UPSTREAM1: 'https://1.1.1.1/dns-query'
+      UPSTREAM1: 'https://1.0.0.1/dns-query'
+    deploy:
+      resources:
+        limits:
+          cpus: '1.00'
+          memory: 128M
+        reservations:
+          memory: 32M
+          
+  googleflared:
+    container_name: googleflared
+    image: visibilityspots/cloudflared:latest
+    restart: unless-stopped
+    networks:
+      pihole_net:
+        ipv4_address: 10.0.0.4
+    environment:
+      UPSTREAM1: 'https://8.8.8.8/dns-query'
+      UPSTREAM2: 'https://8.8.4.4/dns-query'
+    deploy:
+      resources:
+        limits:
+          cpus: '1.00'
+          memory: 128M
+        reservations:
+          memory: 32M
+          
+  pi-hole:
+    depends_on: [cloudflared, googleflared]
     container_name: pihole
     image: pihole/pihole:latest
+    restart: unless-stopped
     ports:
       - "53:53/tcp"
       - "53:53/udp"
       - "67:67/udp"
-      - "8080:80/tcp"
-      - "8443:443/tcp"
+      - "8088:80/tcp"
     environment:
-      - TZ=${TIMEZONE}
-      - PIHOLE_DNS_=172.20.0.2#5054;1.1.1.1 # referencing by name results in "Invalid IP detected in PIHOLE_DNS_: cloudflared#5054"
-      - WEBPASSWORD=${PIHOLE_PW}
-      - REV_SERVER=true
-      - REV_SERVER_CIDR=${PIHOLE_REVERSE_DNS}
-      - ServerIP=${PIHOLE_HOST_IP}
-      - ServerIPv6=${PIHOLE_HOST_IPV6}
-    #dns:
-      #- 127.0.0.1 # "Sets your container's resolve settings to localhost so it can resolve DHCP hostnames [...]" - github.com/pi-hole/docker-pi-hole
-      #- 1.1.1.1 # Backup server
-    volumes: # store your data between container upgrades
-      - "/etc/pihole/:/etc/pihole/"
-      - "/etc/dnsmasq.d/:/etc/dnsmasq.d/"
-    cap_add:
-      - NET_ADMIN # Recommended but not required (DHCP needs NET_ADMIN) https://github.com/pi-hole/docker-pi-hole#note-on-capabilities
-    depends_on:
-      - "cloudflared"
-    restart: always
+      ServerIP: '10.0.0.3'
+      DNS1: '10.0.0.2#5054'
+      DNS2: '10.0.0.4#5054'
+      IPv6: 'true'
+      TZ: 'America/Los_Angeles'
+      DNSMASQ_LISTENING: 'all'
+      WEBPASSWORD: 'TBZ'
+      VIRTUAL_HOST: 'lb3.local'
     networks:
-      - dns-net
-
+      pihole_net:
+        ipv4_address: 10.0.0.3
+    dns:
+      - 127.0.0.1
+    volumes:
+      - './etc-pihole/:/etc/pihole/'
+      - './etc-dnsmasq.d/:/etc/dnsmasq.d/'
+      - './var-log/:/var/log/'
+    # Recommended but not required (DHCP needs NET_ADMIN)
+    #   https://github.com/pi-hole/docker-pi-hole#note-on-capabilities
+    cap_add:
+      - NET_ADMIN
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+          
 networks:
-  dns-net:
+  pihole_net:
+    driver: bridge
     ipam:
-      config:
-        - subnet: 172.20.0.0/24
+     config:
+       - subnet: 10.0.0.0/29
