@@ -1,96 +1,108 @@
-# **Dokumentation LB3**
-
----
-
-# Inhaltsverzeichnis
-
-- [**Dokumentation LB3**](#dokumentation-lb3)
-- [Inhaltsverzeichnis](#inhaltsverzeichnis)
-- [Einführung](#einführung)
-- [Grafische Übersicht](#grafische-übersicht)
-- [Code](#code)
-  - [Code-Quelle](#code-quelle)
-  - [Vagrantfile](#vagrantfile)
-
----
-
-# Einführung
-Ich habe mich für das Projekt **Portainer Server via Ubuntu -> Docker** entschieden.
-Mein Projekt umfasst die automatische Einrichtung eines portainers, welcher verwendet werden kann um verschiedene Dienste zur Verfügung zu stellen wie z.B. einen Minecraftserver. 
-Der Portainer wird auf einer Docker VM installiert, welche wiederrum über Ubuntu installiert wird mit dem Vagrantfile. 
+## Pi-hole with cloudflared DoH (DNS-Over-HTTPS)
+This example provides a base setup for using [Pi-hole](https://docs.pi-hole.net/) with the [cloudflared DoH](https://docs.pi-hole.net/guides/dns/cloudflared/) service.
+More details on how to customize the installation and the compose file can be found in [Docker Pi-hole documentation](https://github.com/pi-hole/docker-pi-hole).
 
 
----
-<a name="grafische"></a>
-# Grafische Übersicht
-![image](https://github.com/RobinGantenbein/M300-Services/blob/main/lb3/images/Grafik.jpg)  
+Project structure:
+```
+.
+├── .env
+├── compose.yaml
+└── README.md
+```
+
+[_compose.yaml_](compose.yaml)
+``` yaml
+services:
+  pihole:
+    image: pihole/pihole:latest
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "67:67/udp"
+      - "8080:80/tcp"
+      - "8443:443/tcp"
+    ...
+  cloudflared:
+    image: visibilityspots/cloudflared
+    ports:
+      - "5054:5054/tcp"
+      - "5054:5054/udp"
+    ...
+```
+
+## Configuration
+
+### .env
+Before deploying this setup, you need to configure the following values in the [.env](.env) file.
+- TZ ([time zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones))
+- PIHOLE_PW (admin password)
+- PIHOLE_ROUTER_IP (only needed for activated conditional forwarding)
+- PIHOLE_NETWORK_DOMAIN (only needed for activated conditional forwarding)
+- PIHOLE_HOST_IP (IPv4 address of your Pi-hole - needs to by static)
+- PIHOLE_HOST_IPV6 (IPv6 address of your Pi-hole - can be empty if you only use IPv4)
+
+### Conditional forwarding (optional, default: enabled)
+If you would like to disable conditional forwarding, delete the environment variables starting with "CONDITIONAL_FORWARDING"
+
+### Container DNS (optional, default: disabled)
+In the docker compose file, dns is added as a comment. To enable dns remove '#' in front of the following lines: 
+``` yaml
+dns:
+    - 127.0.0.1 # "Sets your container's resolve settings to localhost so it can resolve DHCP hostnames [...]" - github.com/pi-hole/docker-pi-hole
+    - 1.1.1.1 # Backup server 
+```
+
+## Deploy with docker compose
+When deploying this setup, the admin web interface will be available on port 8080 (e.g. http://localhost:8080/admin).
+
+``` shell
+$ docker compose up -d
+Starting cloudflared ... done
+Starting pihole      ... done
+```
 
 
+## Expected result
 
----  
+Check containers are running and the port mapping:
+```
+$ docker ps
+CONTAINER ID   IMAGE                                 COMMAND                  CREATED         STATUS                            PORTS                                                                                                     NAMES
+afcf5ca4214c   pihole/pihole:latest                  "/s6-init"               3 seconds ago   Up 3 seconds (health: starting)   0.0.0.0:53->53/udp, 0.0.0.0:53->53/tcp, 0.0.0.0:67->67/udp, 0.0.0.0:8080->80/tcp, 0.0.0.0:8443->443/tcp   pihole
+dfd49ab7a372   visibilityspots/cloudflared           "/bin/sh -c '/usr/lo…"   4 seconds ago   Up 3 seconds (health: starting)   0.0.0.0:5054->5054/tcp, 0.0.0.0:5054->5054/udp                                                            cloudflared
+```
 
-# Code
-
-## Code-Quelle
-Ich habe das Vagrantfile von Herrn Berger aus dem Freigegebenen Ordner (C:\Git\M300\vagrant\web) als Vorlage für mein File verwendet. 
-Danach habe ich den Code angepasst und Docker installiert. 
-Wie das geht habe ich auf folgenden Seiten gefunden: 
-https://docs.docker.com/engine/install/ubuntu/ 
-https://docs.portainer.io/v/ce-2.11/start/install/server/docker/linux
+Navigate to `http://localhost:8080` in your web browser to access the installed Pi-hole web interface.
 
 
-## Vagrantfile
+Stop the containers with
+``` shell
+$ docker compose down
+# To delete all data run:
+$ docker compose down -v
+```
 
-Mein Vagrantfile sieht folgendermassen aus:    
+## Troubleshooting
 
-`Vagrant.configure(2) do |config|  `  
-  `config.vm.box = "ubuntu/bionic64"`  
-  `config.vm.network "forwarded_port", guest:9443, host:9443, auto_correct: false`  
-  `config.vm.synced_folder ".", "/var/www/html"  `  
-`config.vm.provider "virtualbox" do |vb|`
-  `vb.memory = "512"  `  
-`end` 
+### - Starting / Stopping pihole-FTL loop:
+  Sometimes, it can happen that there occurs a problem starting pihole-FTL.
+  I personally had this issue when adding this line to the shared volumes:
+  ```
+  - "/pihole/pihole.log:/var/log/pihole.log"
+  ```
+  To fix this issue, I found this [issue](https://github.com/pi-hole/docker-pi-hole/issues/645#issuecomment-670809672), 
+  which suggested adding an empty file (`touch /pihole/pihole.log`) to prevent it from creating a directory.
+  The directory would not allow starting pihole-FTL and result in something like this:
+  ```
+  # Starting pihole-FTL (no-daemon) as root
+  # Stopping pihole-FTL
+  ...
+  ```
+  If you created an empty file, you may also check the ownership to prevent permission problems.
   
-`config.vm.provision "shell", inline: <<-SHELL  `    
+### - Installing on Ubuntu may conflict with `systemd-resolved` - see [Installing on Ubuntu](https://github.com/pi-hole/docker-pi-hole#installing-on-ubuntu) for help.
 
-<h3>#Get Docker Image</h3>
-
-`sudo apt-get update`  
-`sudo apt-get install ca-certificates curl gnupg lsb-release`  
-
-`curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg`
-
-<h3>#Statusupdate</h3>
-
-`echo \
-  "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
-  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null`
-
-<h3>#Install Docker</h3>
-
-`sudo apt-get update  `  
-`sudo apt-get install docker-ce docker-ce-cli containerd.io -y`
-
-<h3>#Install Portainer</h3>
-
-`docker volume create M300`  
-`docker run -d -p 8000:8000 -p 9443:9443 --name portainer 
-    --restart=always 
-    -v /var/run/docker.sock:/var/run/docker.sock 
-    -v M300:/data 
-    portainer/portainer-ce:latest`  
-  
-`SHELL`  
-`end`
-
-
-| Code | Beschreibung |
-| -------------- | ----------------- |
-| Vagrant.configure("2") do config | In dieser Zeile wird die API Version, in diesem Fall die Nummer 2, vom Vagrantfile beschrieben. Die Konfigurationen der Vm werden hier drin geschrieben und somit ist diese Zeile "der Stamm" des Codes.  |
-| config.vm.box | Hier wird die Version des OS beschrieben, welches danach erstellt wird |
-| db.vm.network | Da definiere ich den Port auf welchen dann die VM zugreift. In diesem Fall wäre es für MySQL Port 9443 und für die Web-Applikation phpmyadmin Port 9443.  |
-| db.vm.provision | In diesem Schritt erlaube ich die Ausführung von einem Shell Skript nachdem das Guest OS gebootet hat. |
-| config.vm.provider :virtualbox do vb | Hier definiere ich den Provider der VM, in diesem Fall Virtualbox. Zusätzlich habe ich noch Anpassungen gemacht und definiert, wie viel RAM die VM benutzen darf.  |
-| docker volume create M300 | Hier wird ein Volume in portainer erstellt, welches als Speicher dienen kann. |
-| docker run | Hier definiere ich, auf welchem Port Dockerzuhören soll. Da ich den Port 8000 und 9443 benötige definiere ich diese. Der Code funktioniert so: Port welcher die "request" erhält : Weiterleitung an den Port, welcher Portainer abgespeichert hat. (9443:9443)|  
-
+### - Environment variables are version-dependent
+  Environment variables like "CONDIIONAL_FORWARDING*" and "DNS1" are deprecated and replaced by e.g. "REV_SERVER*" and "PIHOLE_DNS" in version 5.8+.
+  Current information about environment variables can be found here: https://github.com/pi-hole/docker-pi-hole
