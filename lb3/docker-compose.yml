@@ -7,9 +7,9 @@ services:
       - "5054:5054/tcp"
       - "5054:5054/udp"
     environment:
-      - TZ=Europe/Zurich
+      - TZ=${TIMEZONE}
       - PORT=5054
-      - ADDRESS=192.168.60.5
+      - ADDRESS=192.168.178.6
     restart: always
     networks:
       dns-net:
@@ -25,11 +25,13 @@ services:
       - "8080:80/tcp"
       - "8443:443/tcp"
     environment:
-      - TZ=TIMEZONE=Europe/Zurich
+      - TZ=${TIMEZONE}
       - PIHOLE_DNS_=172.20.0.2#5054;1.1.1.1 # referencing by name results in "Invalid IP detected in PIHOLE_DNS_: cloudflared#5054"
-      - WEBPASSWORD=TBZ
-      - REV_SERVER_CIDR=192.168.60.0/24
-      - ServerIP=192.168.60.5
+      - WEBPASSWORD=${PIHOLE_PW}
+      - REV_SERVER=true
+      - REV_SERVER_CIDR=${PIHOLE_REVERSE_DNS}
+      - ServerIP=${PIHOLE_HOST_IP}
+      - ServerIPv6=${PIHOLE_HOST_IPV6}
     #dns:
       #- 127.0.0.1 # "Sets your container's resolve settings to localhost so it can resolve DHCP hostnames [...]" - github.com/pi-hole/docker-pi-hole
       #- 1.1.1.1 # Backup server
