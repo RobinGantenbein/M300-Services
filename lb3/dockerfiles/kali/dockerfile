@@ -11,7 +11,6 @@ RUN DEBIAN_FRONTEND=noninteractive apt install -y xfce4 xfce4-goodies x11vnc xvf
 RUN mkdir ~/.vnc
 RUN x11vnc -storepasswd 1234 ~/.vnc/passwd
 COPY entrypoint.sh /entrypoint.sh
-sudo ENTRYPOINT ["entrypoint.sh"]
 
 # Alias
 RUN echo "alias l='ls -al'" >> /root/.bashrc
