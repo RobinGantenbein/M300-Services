@@ -85,9 +85,10 @@ Dieses Passwort kopieren wir ins Webgui, dort können wir dan das PW ändern.
 
 ![image](https://github.com/RobinGantenbein/M300-Services/blob/main/lb3/images/clusterview.png)
 
-Wir müssen bevor wir ein Volum mappen es zuerst erstellen. Dies ist einfach der Standartweg um ein Directory zu erstellen. Mit pwd können wir uns diesen Pfad angeben lassen um ihn zu kopieren.
 
 <h4>Um sich nun bei Rancher anzumelden werden die Anmeldedaten, welche man zuvor festgelegt haben verwendet</h4>
+
+Wir müssen bevor wir ein Volume mappen es zuerst erstellen. Dies ist einfach der Standartweg um ein Directory zu erstellen. Mit pwd können wir uns diesen Pfad angeben lassen um ihn zu kopieren.
 
 ![image](https://github.com/RobinGantenbein/M300-Services/blob/main/lb3/images/rancherhost.png)
 
