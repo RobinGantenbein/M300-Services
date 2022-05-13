@@ -122,7 +122,7 @@ Danach kann man unter den Charts die jeweilige App auswählen und diese installi
 |rancher/rancher:stable|Die stabile version von Rancher wird hiermit heruntergeladen, da wir mit den alten Beta releases keine positiven Erfahrungen gesammelt haben.|
 
 Codebeschreibung für Dockerinstallation findet man bei folgendem Link: 
-https://github.com/Samtheboogieman/M300-Services/blob/master/LB2/lb2.md
+https://github.com/Samtheboogieman/M300-Services/blob/master/LB2/lb2.md#code-beschreibung
 
 
 ---
