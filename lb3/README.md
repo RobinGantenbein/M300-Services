@@ -12,7 +12,7 @@
 ---
 
 # Einführung
-Im laufe der LB03 haben wir einige verschiedene Projekte wie z.B. Kali/Metasploitable oder auch Docker mit Phihole versucht zu kreieren. Leider sind diese Versuche gescheitert und nun haben wir uns mit Herrn berger dafür entschieden eine Installationsanleitung für Rancher zu schreiben.
+Im laufe der LB03 haben wir einige verschiedene Projekte wie z.B. Kali/Metasploitable oder auch Docker mit Pihole versucht zu kreieren. Leider sind diese Versuche gescheitert und nun haben wir uns mit Herrn Berger dafür entschieden eine Installationsanleitung für Rancher zu schreiben.
 
 ---  
 
