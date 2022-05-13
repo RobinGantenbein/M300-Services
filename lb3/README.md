@@ -88,3 +88,7 @@ Danach kann man unter den Charts die jeweilige App auswählen und diese installi
 ![Image](https://github.com/RobinGantenbein/M300-Services/blob/main/lb3/images/deployments.png)
 ![Image](https://github.com/RobinGantenbein/M300-Services/blob/main/lb3/images/deployment%20create.png)
 
+- <h3>Volume erstellen</h3>
+<h4>Um ein neues Volume zu erstellen kann man direkt auf "PersistentVolume" gehen und dort ein neues erstellen</h4>
+
+![Image](https://github.com/RobinGantenbein/M300-Services/blob/main/lb3/images/volume.png)
