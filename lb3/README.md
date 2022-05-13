@@ -69,7 +69,7 @@ rancher/rancher:stable
 
 ![image](https://github.com/RobinGantenbein/M300-Services/blob/main/lb3/images/add-host.png)
 
-Das Dashboard von Rancher kann nun über die vorherig definierte Adresse geöffnet werden und Cluster hinzufügen
+<h4>Das Dashboard von Rancher kann nun über die vorherig definierte Adresse geöffnet werden und Cluster hinzufügen</h4>
 
 ![image](https://github.com/RobinGantenbein/M300-Services/blob/main/lb3/images/clusterview.png)
 
