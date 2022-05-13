@@ -52,11 +52,13 @@ Für die Installation von Rancher auf Ubuntu sind nur eine Ubuntu VM mit der Sta
  sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin`
  </em>
  
- Note: Es giebt viele andere Methoden um Rancher zu installieren, bei unserer handelt es sich um eine K3s single Node installation.
+ 
 
 - <h3>Rancher installieren</h3>
 
 https://rancher.com/docs/rancher/v2.6/en/installation/other-installation-methods/single-node-docker/
+
+Note: Es gibt viele andere Methoden um Rancher zu installieren, bei unserer handelt es sich um eine K3s single Node installation.
 
 <em>`docker run -d --restart=unless-stopped \
 -p 80:80 -p 443:443 \
@@ -80,14 +82,17 @@ Dieses Passwort kopieren wir ins Webgui, dort können wir dan das PW ändern.
 
 <h4>Das Dashboard von Rancher kann nun über die vorherig definierte Adresse geöffnet werden und Cluster hinzufügen</h4>
 
+
 ![image](https://github.com/RobinGantenbein/M300-Services/blob/main/lb3/images/clusterview.png)
+
+Wir müssen bevor wir ein Volum mappen es zuerst erstellen. Dies ist einfach der Standartweg um ein Directory zu erstellen. Mit pwd können wir uns diesen Pfad angeben lassen um ihn zu kopieren.
 
 <h4>Um sich nun bei Rancher anzumelden werden die Anmeldedaten, welche man zuvor festgelegt haben verwendet</h4>
 
 ![image](https://github.com/RobinGantenbein/M300-Services/blob/main/lb3/images/rancherhost.png)
 
 - <h3>Volume erstellen</h3>
-<h4>Um ein neues Volume zu erstellen kann man direkt auf "PersistentVolume" gehen und dort ein neues erstellen</h4>
+<h4>Um ein neues Volume zu erstellen kann man direkt auf "PersistentVolume" gehen und dort ein neues erstellen, dort unter HostPath geben wir nun unser kopierter Pfad an, damit Rancher dies Mappen kann.</h4>
 
 ![Image](https://github.com/RobinGantenbein/M300-Services/blob/main/lb3/images/volume.png)
 
