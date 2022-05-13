@@ -17,7 +17,7 @@ Im laufe der LB03 haben wir einige verschiedene Projekte wie z.B. Kali/Metasploi
 ---  
 
 # Installationsanleitung
-- <h2>Vorbereitungen</h2>
+<h2>Vorbereitungen</h2>
 
 Für die Installation von Rancher auf Ubuntu sind nur eine Ubuntu VM mit der Standardinstallation notwendig.
 
@@ -27,8 +27,9 @@ Für die Installation von Rancher auf Ubuntu sind nur eine Ubuntu VM mit der Sta
 16GB Speicher, 1 Prozessor
 
 ---
-- <h2>Installation</h2>
+<h2>Installation</h2>
 <h3>Docker installieren</h3>
+
 <em>
 sudo apt-get remove docker docker-engine docker.io containerd runc
 
@@ -48,7 +49,7 @@ echo \
  sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
  </em>
 
-<h3>Rancher installieren</h3>
+- <h3>Rancher installieren</h3>
 
 <em>docker run -d --restart=unless-stopped \
 -p 80:80 -p 443:443 \
@@ -56,13 +57,22 @@ echo \
 rancher/rancher:stable
 </em>
 
-<h3>Konfiguration Rancher</h3>
+- <h3>Konfiguration Rancher</h3>
 
 <em>docker ps</em> 
 
 <em>docker logs ("vorherige ausgelesene ID") 2>&1 | grep "Bootstrap Password:"
 
-</em>
+</em> 
+
+<h4>Nun kann man die eigene Adresse für Rancher auswählen</h4>
+
+![image](https://github.com/RobinGantenbein/M300-Services/blob/main/lb3/images/add-host.png)
+
+Das Dashboard von Rancher kann nun über die vorherig definierte Adresse geöffnet werden und Cluster hinzufügen
+
+![image](https://github.com/RobinGantenbein/M300-Services/blob/main/lb3/images/clusterview.png)
+
+- <h3>Installation Apps</h3>
 
 
-- Installation Apps
