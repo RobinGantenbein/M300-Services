@@ -83,7 +83,7 @@ Zuerst ein Repository erstellt werden:
 Danach kann man unter den Charts die jeweilige App auswählen und diese installieren:
 ![Image](https://github.com/RobinGantenbein/M300-Services/blob/main/lb3/images/charts.png)
 
-<h4>Wenn man ein File aus einem Yaml möchte verwenden kann man unter "Depolyments" oben rechts dieses kreieren</h4>
+<h4>Wenn man ein File aus einem Yaml möchte verwenden kann man unter "Deployments" oben rechts dieses kreieren</h4>
 
 ![Image](https://github.com/RobinGantenbein/M300-Services/blob/main/lb3/images/deployments.png)
 ![Image](https://github.com/RobinGantenbein/M300-Services/blob/main/lb3/images/deployment%20create.png)
