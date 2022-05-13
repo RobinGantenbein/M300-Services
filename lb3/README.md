@@ -74,5 +74,17 @@ rancher/rancher:stable
 ![image](https://github.com/RobinGantenbein/M300-Services/blob/main/lb3/images/clusterview.png)
 
 - <h3>Installation Apps</h3>
+<h4>Um eine App aus den Charts zu installieren muss man folgendes vornehmen:</h4>
 
+Zuerst ein Repository erstellt werden: 
+
+![Image](https://github.com/RobinGantenbein/M300-Services/blob/main/lb3/images/repository.png)
+
+Danach kann man unter den Charts die jeweilige App auswählen und diese installieren:
+![Image](https://github.com/RobinGantenbein/M300-Services/blob/main/lb3/images/charts.png)
+
+<h4>Wenn man ein File aus einem Yaml möchte verwenden kann man unter "Depolyments" oben rechts dieses kreieren</h4>
+
+![Image](https://github.com/RobinGantenbein/M300-Services/blob/main/lb3/images/deployments.png)
+![Image](https://github.com/RobinGantenbein/M300-Services/blob/main/lb3/images/deployment%20create.png)
 
